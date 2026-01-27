@@ -20,7 +20,7 @@ public class TransacaoMapper {
         return transacao;
     }
 
-    public TransacaoResponseDTO toResponseDTO(Transacao transacao){
+    public TransacaoResponseDTO toResponseDTO(Transacao transacao) {
         return new TransacaoResponseDTO(
                 transacao.getId(),
                 transacao.getDescricao(),
@@ -31,7 +31,8 @@ public class TransacaoMapper {
                 transacao.getObservacoes()
         );
     }
-    public void updateEntityFromDTO(TransacaoRequestDTO dto, Transacao transacao){
+
+    public void updateEntityFromDTO(TransacaoRequestDTO dto, Transacao transacao) {
         transacao.setDescricao(dto.descricao());
         transacao.setTipo(dto.tipo());
         transacao.setData(dto.data());

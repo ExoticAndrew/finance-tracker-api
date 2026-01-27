@@ -1,7 +1,7 @@
 package despesaspessoais.dtos;
 
-import despesaspessoais.model.Categoria;
-import despesaspessoais.model.Tipotransacao;
+import despesaspessoais.enums.Categoria;
+import despesaspessoais.enums.Tipotransacao;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package despesaspessoais.model;
+package despesaspessoais.enums;
 
 public enum Categoria {
     ALIMENTACAO,

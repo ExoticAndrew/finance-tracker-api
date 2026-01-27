@@ -1,5 +1,7 @@
 package despesaspessoais.model;
 
+import despesaspessoais.enums.Categoria;
+import despesaspessoais.enums.Tipotransacao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,13 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table (name = "transacoes")
-
-
+@Table(name = "transacoes")
 public class Transacao {
 
     @Id
@@ -27,13 +28,13 @@ public class Transacao {
     private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
+    @Column(nullable = false)
     private Categoria categoria;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private LocalDate data;
 
-    @Column (length = 500)
+    @Column(length = 500)
     private String observacoes;
 
     @Enumerated(EnumType.STRING)
