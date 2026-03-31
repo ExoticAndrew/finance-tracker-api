@@ -9,12 +9,14 @@ import despesaspessoais.enums.Tipotransacao;
 import despesaspessoais.model.Transacao;
 import despesaspessoais.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +31,10 @@ public class TransacaoService {
         return transacaoMapper.toResponseDTO(transacaoSalva);
     }
 
-    public List<TransacaoResponseDTO> listarTodas() {
-        return transacaoRepository.findAll()
-                .stream()
-                .map(transacaoMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<TransacaoResponseDTO> listarTodas(Pageable pageable) {
+        return transacaoRepository.findAll(pageable)
+                .map(transacaoMapper::toResponseDTO);
+
     }
 
     public TransacaoResponseDTO buscarPorId(Long id) {
@@ -61,27 +62,22 @@ public class TransacaoService {
     }
 
 
-    public List<TransacaoResponseDTO> listarPorTipo(Tipotransacao tipo) {
-        return transacaoRepository.findByTipo(tipo)
-                .stream()
-                .map(transacaoMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<TransacaoResponseDTO> listarPorTipo(Tipotransacao tipo, Pageable pageable) {
+        return transacaoRepository.findByTipo(tipo, pageable)
+                .map(transacaoMapper::toResponseDTO);
+
     }
+        public Page<TransacaoResponseDTO> listarPorCategoria(Categoria categoria, Pageable pageable) {
+        return transacaoRepository.findByCategoria(categoria, pageable)
+                .map(transacaoMapper::toResponseDTO);
 
-
-    public List<TransacaoResponseDTO> listarPorCategoria(Categoria categoria) {
-        return transacaoRepository.findByCategoria(categoria)
-                .stream()
-                .map(transacaoMapper::toResponseDTO)
-                .collect(Collectors.toList());
 
     }
 
-    public List<TransacaoResponseDTO> listarPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
-        return transacaoRepository.findByDataBetween(dataInicio, dataFim)
-                .stream()
-                .map(transacaoMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<TransacaoResponseDTO> listarPorPeriodo(LocalDate dataInicio, LocalDate dataFim, Pageable pageable) {
+        return transacaoRepository.findByDataBetween(dataInicio, dataFim, pageable)
+                .map(transacaoMapper::toResponseDTO);
+
 
     }
 
@@ -92,11 +88,10 @@ public class TransacaoService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public List<TransacaoResponseDTO> listarPorTipoEPeriodo(Tipotransacao tipo, LocalDate dataInicio, LocalDate dataFim) {
-        return transacaoRepository.findByTipoAndDataBetween(tipo, dataInicio, dataFim)
-                .stream()
-                .map(transacaoMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<TransacaoResponseDTO> listarPorTipoEPeriodo(Tipotransacao tipo, LocalDate dataInicio, LocalDate dataFim, Pageable pageable) {
+        return transacaoRepository.findByTipoAndDataBetween(tipo, dataInicio, dataFim,pageable)
+                .map(transacaoMapper::toResponseDTO);
+
     }
 
 

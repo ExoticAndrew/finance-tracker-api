@@ -7,6 +7,9 @@ import despesaspessoais.enums.Tipotransacao;
 import despesaspessoais.service.TransacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,27 +49,23 @@ public class TransacaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<TransacaoResponseDTO>> listarTodas() {
-        List<TransacaoResponseDTO> transacoes = transacaoService.listarTodas();
-        return ResponseEntity.ok(transacoes);
-    }
+
 
     @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<TransacaoResponseDTO>> listarPorCategoria(@PathVariable Categoria categoria) {
-        List<TransacaoResponseDTO> transacoes = transacaoService.listarPorCategoria(categoria);
+    public ResponseEntity<Page<TransacaoResponseDTO>> listarPorCategoria(@PathVariable Categoria categoria, @PageableDefault(size = 10, sort = "data") Pageable pageable) {
+        Page<TransacaoResponseDTO> transacoes = transacaoService.listarPorCategoria(categoria, pageable);
         return ResponseEntity.ok(transacoes);
     }
 
     @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<List<TransacaoResponseDTO>> listarPorTipo(@PathVariable Tipotransacao tipo) {
-        List<TransacaoResponseDTO> transacoes = transacaoService.listarPorTipo(tipo);
+    public ResponseEntity<Page<TransacaoResponseDTO>> listarPorTipo(@PathVariable Tipotransacao tipo, @PageableDefault(size = 10, sort = "data") Pageable pageable) {
+        Page<TransacaoResponseDTO> transacoes = transacaoService.listarPorTipo(tipo, pageable);
         return ResponseEntity.ok(transacoes);
     }
 
     @GetMapping("/periodo")
-    public ResponseEntity<List<TransacaoResponseDTO>> listarPorPeriodo(@RequestParam LocalDate dataInicio, @RequestParam LocalDate dataFim) {
-        List<TransacaoResponseDTO> transacoes = transacaoService.listarPorPeriodo(dataInicio, dataFim);
+    public ResponseEntity<Page<TransacaoResponseDTO>> listarPorPeriodo(@RequestParam LocalDate dataInicio, @RequestParam LocalDate dataFim, @PageableDefault(size = 10, sort = "data") Pageable pageable) {
+        Page<TransacaoResponseDTO> transacoes = transacaoService.listarPorPeriodo(dataInicio, dataFim, pageable);
         return ResponseEntity.ok(transacoes);
     }
 

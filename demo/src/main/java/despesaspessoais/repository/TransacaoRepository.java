@@ -3,6 +3,8 @@ package despesaspessoais.repository;
 import despesaspessoais.enums.Categoria;
 import despesaspessoais.enums.Tipotransacao;
 import despesaspessoais.model.Transacao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,20 +17,21 @@ import java.util.List;
 @Repository
 public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
+    Page<Transacao> findByTipo(Tipotransacao tipo, Pageable pageable);
+
+    Page<Transacao> findByCategoria(Categoria categoria, Pageable pageable);
+
+    Page<Transacao> findByDataBetween(LocalDate dataInicio, LocalDate dataFim, Pageable pageable);
+
+    Page<Transacao> findByTipoAndDataBetween(Tipotransacao tipo, LocalDate dataInicio, LocalDate dataFim, Pageable pageable);
+
     List<Transacao> findByTipo(Tipotransacao tipo);
-
-    List<Transacao> findByCategoria(Categoria categoria);
-
-    List<Transacao> findByDataBetween(LocalDate dataInicio, LocalDate dataFim);
-
-    List<Transacao> findByTipoAndDataBetween(Tipotransacao tipo, LocalDate dataInicio, LocalDate dataFim);
-
-    List<Transacao> findByCategoriaAndDataBetween(Categoria categoria, LocalDate dataInicio, LocalDate dataFim);
 
     @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.categoria = :categoria AND t.data BETWEEN :dataInicio AND :dataFim")
     BigDecimal calcularTotalPorCategoriaEPeriodo(
             @Param("categoria") Categoria categoria,
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim
+
     );
 }
