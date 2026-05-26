@@ -15,19 +15,19 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // origens permitidas — localhost dev + deploy futuro
+
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",
                 "https://finance-tracker-front.vercel.app"
         ));
 
-        // métodos permitidos
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        // headers permitidos
+
         config.setAllowedHeaders(List.of("*"));
 
-        // permite enviar cookies e Authorization header
+
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
