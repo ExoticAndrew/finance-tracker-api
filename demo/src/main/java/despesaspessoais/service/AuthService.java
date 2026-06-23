@@ -27,26 +27,22 @@ public class AuthService {
         }
 
         String token = jwtService.gerarToken(usuario.getEmail());
-
-        return new LoginResponseDTO(token, usuario.getNome(), usuario.getEmail());
+        return new LoginResponseDTO(token, usuario.getNome());
     }
 
     public LoginResponseDTO cadastrar(CadastroRequestDTO dto) {
         if (usuarioRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new RuntimeException("Não foi possível completar o cadastro.");
         }
 
-        Usuario usuario = new Usuario(
-                null,
-                dto.nome(),
-                dto.email(),
-                passwordEncoder.encode(dto.senha())
-        );
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
 
         usuarioRepository.save(usuario);
 
         String token = jwtService.gerarToken(usuario.getEmail());
-
-        return new LoginResponseDTO(token, usuario.getNome(), usuario.getEmail());
+        return new LoginResponseDTO(token, usuario.getNome());
     }
 }

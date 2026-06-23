@@ -40,4 +40,8 @@ public class Transacao {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Tipotransacao tipo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 }
