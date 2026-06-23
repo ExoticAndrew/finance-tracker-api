@@ -1,5 +1,6 @@
 package despesaspessoais.controller;
 
+import despesaspessoais.dtos.ResumoMensalDTO;
 import despesaspessoais.dtos.TransacaoRequestDTO;
 import despesaspessoais.dtos.TransacaoResponseDTO;
 import despesaspessoais.enums.Categoria;
@@ -13,7 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Sort;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -79,5 +80,15 @@ public class TransacaoController {
     public ResponseEntity<BigDecimal> calcularTotalPorTipo(@PathVariable Tipotransacao tipo) {
         BigDecimal total = transacaoService.calcularTotalPorTipo(tipo);
         return ResponseEntity.ok(total);
+    }
+    @GetMapping
+    public ResponseEntity<Page<TransacaoResponseDTO>> listar(
+            @PageableDefault(size = 10, sort = "data", direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable) {
+        Page<TransacaoResponseDTO> transacoes = transacaoService.listarTodas(pageable);
+        return ResponseEntity.ok(transacoes);
+    }
+    @GetMapping("/resumo/mensal")
+    public ResponseEntity<List<ResumoMensalDTO>> getResumoMensal(@RequestParam int ano) {
+        return ResponseEntity.ok(transacaoService.getResumoMensal(ano));
     }
 }
