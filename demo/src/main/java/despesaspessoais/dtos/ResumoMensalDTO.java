@@ -1,4 +1,9 @@
 package despesaspessoais.dtos;
 
-public record ResumoMensalDTO() {
-}
+import java.math.BigDecimal;
+
+public record ResumoMensalDTO(
+        int mes,
+        BigDecimal totalReceitas,
+        BigDecimal totalDespesas
+) {}
