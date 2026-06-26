@@ -17,7 +17,7 @@ public class CorsConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",
-                "https://fintrack-front.vercel.app"
+                "https://finance-tracker-front-theta.vercel.app"
         ));
 
         config.setAllowedMethods(List.of(
