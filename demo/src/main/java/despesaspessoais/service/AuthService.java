@@ -3,6 +3,8 @@ package despesaspessoais.service;
 import despesaspessoais.dtos.CadastroRequestDTO;
 import despesaspessoais.dtos.LoginRequestDTO;
 import despesaspessoais.dtos.LoginResponseDTO;
+import despesaspessoais.exception.CredenciaisInvalidasException;
+import despesaspessoais.exception.EmailJaCadastradoException;
 import despesaspessoais.model.Usuario;
 import despesaspessoais.repository.UsuarioRepository;
 import despesaspessoais.security.JwtService;
@@ -20,10 +22,10 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
+                .orElseThrow(CredenciaisInvalidasException::new);
 
         if (!passwordEncoder.matches(dto.senha(), usuario.getSenha())) {
-            throw new RuntimeException("Email ou senha inválidos");
+            throw new CredenciaisInvalidasException();
         }
 
         String token = jwtService.gerarToken(usuario.getEmail());
@@ -32,7 +34,7 @@ public class AuthService {
 
     public LoginResponseDTO cadastrar(CadastroRequestDTO dto) {
         if (usuarioRepository.existsByEmail(dto.email())) {
-            throw new RuntimeException("Não foi possível completar o cadastro.");
+            throw new EmailJaCadastradoException();
         }
 
         Usuario usuario = new Usuario();
