@@ -6,7 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -76,6 +76,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
     }
 
+
     @ExceptionHandler(EmailJaCadastradoException.class)
     public ResponseEntity<ErroResponse> handlerEmailJaCadastrado(
             EmailJaCadastradoException ex,
@@ -90,7 +91,24 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErroResponse> handlerValidacaoHandlerMethod(
+            HandlerMethodValidationException ex,
+            WebRequest request) {
 
+        String mensagem = ex.getAllErrors().stream()
+                .map(erro -> erro.getDefaultMessage())
+                .collect(Collectors.joining("; "));
+
+        ErroResponse erro = new ErroResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                mensagem,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResponse> handleGenericException(
             Exception ex,
