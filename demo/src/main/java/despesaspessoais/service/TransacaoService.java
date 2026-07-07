@@ -1,5 +1,6 @@
 package despesaspessoais.service;
 
+import despesaspessoais.dtos.ComparativoMensalDTO;
 import despesaspessoais.dtos.ResumoMensalDTO;
 import despesaspessoais.dtos.TransacaoRequestDTO;
 import despesaspessoais.dtos.TransacaoResponseDTO;
@@ -130,4 +131,34 @@ public class TransacaoService {
                 .sorted(Comparator.comparingInt(ResumoMensalDTO::mes))
                 .collect(Collectors.toList());
     }
-}
+    public ComparativoMensalDTO getComparativoMensal() {
+        Usuario usuario = getUsuarioAutenticado();
+        LocalDate hoje = LocalDate.now();
+
+        LocalDate inicioMesAtual = hoje.withDayOfMonth(1);
+        LocalDate fimMesAtual = hoje;
+
+        LocalDate mesAnterior = hoje.minusMonths(1);
+        LocalDate inicioMesAnterior = mesAnterior.withDayOfMonth(1);
+        LocalDate fimMesAnterior = mesAnterior.withDayOfMonth(mesAnterior.lengthOfMonth());
+
+        BigDecimal receitaAtual = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.RECEITA, usuario, inicioMesAtual, fimMesAtual);
+
+        BigDecimal receitaAnterior = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.RECEITA, usuario, inicioMesAnterior, fimMesAnterior);
+
+        BigDecimal despesaAtual = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.DESPESA, usuario, inicioMesAtual, fimMesAtual);
+
+        BigDecimal despesaAnterior = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.DESPESA, usuario, inicioMesAnterior, fimMesAnterior);
+
+        return new ComparativoMensalDTO(
+                receitaAtual,
+                receitaAnterior,
+                despesaAtual,
+                despesaAnterior
+        );
+    }
+    }

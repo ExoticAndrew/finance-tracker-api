@@ -47,4 +47,12 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
             "GROUP BY MONTH(t.data), t.tipo " +
             "ORDER BY MONTH(t.data)")
     List<Object[]> findResumoMensalPorAno(@Param("ano") int ano, @Param("usuario") Usuario usuario);
+    @Query("SELECT COALESCE(SUM(t.valor), 0) FROM Transacao t " +
+            "WHERE t.tipo = :tipo AND t.usuario = :usuario AND t.data BETWEEN :inicio AND :fim")
+    BigDecimal sumValorPorTipoUsuarioEPeriodo(
+            @Param("tipo") Tipotransacao tipo,
+            @Param("usuario") Usuario usuario,
+            @Param("inicio") LocalDate inicio,
+            @Param("fim") LocalDate fim);
+
 }

@@ -1,5 +1,6 @@
 package despesaspessoais.controller;
 
+import despesaspessoais.dtos.ComparativoMensalDTO;
 import despesaspessoais.dtos.ResumoMensalDTO;
 import despesaspessoais.dtos.TransacaoRequestDTO;
 import despesaspessoais.dtos.TransacaoResponseDTO;
@@ -90,5 +91,9 @@ public class TransacaoController {
     @GetMapping("/resumo/mensal")
     public ResponseEntity<List<ResumoMensalDTO>> getResumoMensal(@RequestParam int ano) {
         return ResponseEntity.ok(transacaoService.getResumoMensal(ano));
+    }
+    @GetMapping("/comparativo-mensal")
+    public ResponseEntity<ComparativoMensalDTO> getComparativoMensal() {
+        return ResponseEntity.ok(transacaoService.getComparativoMensal());
     }
 }
