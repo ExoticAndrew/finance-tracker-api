@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -25,13 +26,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.frontend-url}")
+    private String frontendUrlBase;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication)
             throws IOException, ServletException {
-
-        System.out.println(">>> OAuth2 SUCCESS <<<");
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
@@ -49,11 +51,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String token = jwtService.gerarToken(usuario.getEmail());
 
-        String frontendUrl =
-                "http://localhost:4200/oauth2/callback?token=" + token
-                        + "&nome=" + URLEncoder.encode(usuario.getNome(), StandardCharsets.UTF_8);
-
-        System.out.println("Redirecionando para: " + frontendUrl);
+        String frontendUrl = frontendUrlBase + "/oauth2/callback?token=" + token
+                + "&nome=" + URLEncoder.encode(usuario.getNome(), StandardCharsets.UTF_8);
 
         response.sendRedirect(frontendUrl);
     }
