@@ -54,5 +54,11 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
             @Param("usuario") Usuario usuario,
             @Param("inicio") LocalDate inicio,
             @Param("fim") LocalDate fim);
-
+    @Query("SELECT t.categoria, SUM(t.valor) FROM Transacao t " +
+            "WHERE t.tipo = :tipo AND YEAR(t.data) = :ano AND t.usuario = :usuario " +
+            "GROUP BY t.categoria ORDER BY SUM(t.valor) DESC")
+    List<Object[]> findRankingCategoriasPorAnoETipo(
+            @Param("tipo") Tipotransacao tipo,
+            @Param("ano") int ano,
+            @Param("usuario") Usuario usuario);
 }

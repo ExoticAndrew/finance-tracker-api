@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import despesaspessoais.dtos.CategoriaResumoDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -124,13 +125,24 @@ public class TransacaoService {
                             tipo == Tipotransacao.RECEITA ? total : existing.totalReceitas(),
                             tipo == Tipotransacao.DESPESA ? total : existing.totalDespesas()
                     )
+
             );
         }
+
 
         return resumoPorMes.values().stream()
                 .sorted(Comparator.comparingInt(ResumoMensalDTO::mes))
                 .collect(Collectors.toList());
     }
+    public List<CategoriaResumoDTO> getRankingCategorias(int ano) {
+        List<Object[]> resultado = transacaoRepository.findRankingCategoriasPorAnoETipo(
+                Tipotransacao.DESPESA, ano, getUsuarioAutenticado());
+
+        return resultado.stream()
+                .map(row -> new CategoriaResumoDTO((Categoria) row[0], (BigDecimal) row[1]))
+                .collect(Collectors.toList());
+    }
+
     public ComparativoMensalDTO getComparativoMensal() {
         Usuario usuario = getUsuarioAutenticado();
         LocalDate hoje = LocalDate.now();

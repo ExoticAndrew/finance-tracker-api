@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
+import despesaspessoais.dtos.CategoriaResumoDTO;
 @RestController
 @RequestMapping("/api/transacoes")
 @RequiredArgsConstructor
@@ -91,6 +91,10 @@ public class TransacaoController {
     @GetMapping("/resumo/mensal")
     public ResponseEntity<List<ResumoMensalDTO>> getResumoMensal(@RequestParam int ano) {
         return ResponseEntity.ok(transacaoService.getResumoMensal(ano));
+    }
+    @GetMapping("/resumo/categorias")
+    public ResponseEntity<List<CategoriaResumoDTO>> getRankingCategorias(@RequestParam int ano) {
+        return ResponseEntity.ok(transacaoService.getRankingCategorias(ano));
     }
     @GetMapping("/comparativo-mensal")
     public ResponseEntity<ComparativoMensalDTO> getComparativoMensal() {
