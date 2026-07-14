@@ -1,4 +1,7 @@
 package despesaspessoais.dtos;
 
-public record UsuarioResponseDTO() {
-}
+public record UsuarioResponseDTO(
+        Long id,
+        String nome,
+        String email
+) {}
