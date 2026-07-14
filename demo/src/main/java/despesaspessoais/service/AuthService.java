@@ -3,6 +3,7 @@ package despesaspessoais.service;
 import despesaspessoais.dtos.CadastroRequestDTO;
 import despesaspessoais.dtos.LoginRequestDTO;
 import despesaspessoais.dtos.LoginResponseDTO;
+import despesaspessoais.enums.MetodoLogin;
 import despesaspessoais.exception.CredenciaisInvalidasException;
 import despesaspessoais.exception.EmailJaCadastradoException;
 import despesaspessoais.model.Usuario;
@@ -41,6 +42,7 @@ public class AuthService {
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
         usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        usuario.setMetodoLogin(MetodoLogin.LOCAL);
 
         usuarioRepository.save(usuario);
 

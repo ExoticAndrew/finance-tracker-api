@@ -1,5 +1,6 @@
 package despesaspessoais.security;
 
+import despesaspessoais.enums.MetodoLogin;
 import despesaspessoais.model.Usuario;
 import despesaspessoais.repository.UsuarioRepository;
 import jakarta.servlet.ServletException;
@@ -46,6 +47,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     novo.setEmail(email);
                     novo.setNome(nome != null ? nome : email);
                     novo.setSenha(passwordEncoder.encode(UUID.randomUUID().toString()));
+                    novo.setMetodoLogin(MetodoLogin.GOOGLE);
                     return usuarioRepository.save(novo);
                 });
 
