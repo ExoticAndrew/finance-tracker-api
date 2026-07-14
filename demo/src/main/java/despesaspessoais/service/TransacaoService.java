@@ -1,9 +1,6 @@
 package despesaspessoais.service;
 
-import despesaspessoais.dtos.ComparativoMensalDTO;
-import despesaspessoais.dtos.ResumoMensalDTO;
-import despesaspessoais.dtos.TransacaoRequestDTO;
-import despesaspessoais.dtos.TransacaoResponseDTO;
+import despesaspessoais.dtos.*;
 import despesaspessoais.exception.TransacaoNotFoundException;
 import despesaspessoais.map.TransacaoMapper;
 import despesaspessoais.enums.Categoria;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import despesaspessoais.dtos.CategoriaResumoDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -127,6 +123,7 @@ public class TransacaoService {
                     )
 
             );
+
         }
 
 
@@ -172,5 +169,25 @@ public class TransacaoService {
                 despesaAtual,
                 despesaAnterior
         );
+    }
+    public ExtratoDTO getExtrato(int ano) {
+        Usuario usuario = getUsuarioAutenticado();
+        LocalDate inicioDoAno = LocalDate.of(ano, 1, 1);
+        LocalDate fimDoAno = LocalDate.of(ano, 12, 31);
+        LocalDate inicioDosTempos = LocalDate.of(2000, 1, 1);
+
+        BigDecimal receitasAntes = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.RECEITA, usuario, inicioDosTempos, inicioDoAno.minusDays(1));
+        BigDecimal despesasAntes = transacaoRepository.sumValorPorTipoUsuarioEPeriodo(
+                Tipotransacao.DESPESA, usuario, inicioDosTempos, inicioDoAno.minusDays(1));
+        BigDecimal saldoDeArrasto = receitasAntes.subtract(despesasAntes);
+
+        List<TransacaoResponseDTO> transacoes = transacaoRepository
+                .findByUsuarioAndDataBetweenOrderByDataAsc(usuario, inicioDoAno, fimDoAno)
+                .stream()
+                .map(transacaoMapper::toResponseDTO)
+                .collect(Collectors.toList());
+
+        return new ExtratoDTO(saldoDeArrasto, transacoes);
     }
     }

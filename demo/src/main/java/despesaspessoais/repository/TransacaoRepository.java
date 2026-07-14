@@ -33,6 +33,8 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     List<Transacao> findByTipoAndUsuario(Tipotransacao tipo, Usuario usuario);
 
+    List<Transacao> findByUsuarioAndDataBetweenOrderByDataAsc(Usuario usuario, LocalDate inicio, LocalDate fim);
+
     @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.categoria = :categoria AND t.data BETWEEN :dataInicio AND :dataFim AND t.usuario = :usuario")
     BigDecimal calcularTotalPorCategoriaEPeriodo(
             @Param("categoria") Categoria categoria,
@@ -61,4 +63,5 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
             @Param("tipo") Tipotransacao tipo,
             @Param("ano") int ano,
             @Param("usuario") Usuario usuario);
+
 }

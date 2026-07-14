@@ -1,9 +1,6 @@
 package despesaspessoais.controller;
 
-import despesaspessoais.dtos.ComparativoMensalDTO;
-import despesaspessoais.dtos.ResumoMensalDTO;
-import despesaspessoais.dtos.TransacaoRequestDTO;
-import despesaspessoais.dtos.TransacaoResponseDTO;
+import despesaspessoais.dtos.*;
 import despesaspessoais.enums.Categoria;
 import despesaspessoais.enums.Tipotransacao;
 import despesaspessoais.service.TransacaoService;
@@ -19,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import despesaspessoais.dtos.CategoriaResumoDTO;
+
 @RestController
 @RequestMapping("/api/transacoes")
 @RequiredArgsConstructor
@@ -99,5 +96,9 @@ public class TransacaoController {
     @GetMapping("/comparativo-mensal")
     public ResponseEntity<ComparativoMensalDTO> getComparativoMensal() {
         return ResponseEntity.ok(transacaoService.getComparativoMensal());
+    }
+    @GetMapping("/extrato")
+    public ResponseEntity<ExtratoDTO> getExtrato(@RequestParam int ano) {
+        return ResponseEntity.ok(transacaoService.getExtrato(ano));
     }
 }
