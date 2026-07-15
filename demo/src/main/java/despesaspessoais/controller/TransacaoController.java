@@ -101,4 +101,9 @@ public class TransacaoController {
     public ResponseEntity<ExtratoDTO> getExtrato(@RequestParam int ano) {
         return ResponseEntity.ok(transacaoService.getExtrato(ano));
     }
+    @PostMapping("/lote")
+    public ResponseEntity<List<TransacaoResponseDTO>> criarEmLote(@Valid @RequestBody ImportarTransacoesDTO dto) {
+        List<TransacaoResponseDTO> criadas = transacaoService.criarEmLote(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criadas);
+    }
 }

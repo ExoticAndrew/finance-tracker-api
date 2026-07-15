@@ -190,4 +190,19 @@ public class TransacaoService {
 
         return new ExtratoDTO(saldoDeArrasto, transacoes);
     }
+    public List<TransacaoResponseDTO> criarEmLote(ImportarTransacoesDTO dto) {
+        Usuario usuario = getUsuarioAutenticado();
+
+        List<Transacao> transacoes = dto.transacoes().stream()
+                .map(t -> {
+                    Transacao transacao = transacaoMapper.toEntity(t);
+                    transacao.setUsuario(usuario);
+                    return transacao;
+                })
+                .collect(Collectors.toList());
+
+        return transacaoRepository.saveAll(transacoes).stream()
+                .map(transacaoMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
     }
