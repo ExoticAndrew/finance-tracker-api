@@ -1,5 +1,6 @@
 package despesaspessoais.config;
 
+import despesaspessoais.security.ApiAuthenticationEntryPoint;
 import despesaspessoais.security.JwtFilter;
 import despesaspessoais.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final ApiAuthenticationEntryPoint apiAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,7 +41,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
-                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(apiAuthenticationEntryPoint))
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

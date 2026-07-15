@@ -1,5 +1,7 @@
 package despesaspessoais.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +14,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(TransacaoNotFoundException.class)
     public ResponseEntity<ErroResponse> handlerTransacaoNotFound(
@@ -114,11 +118,14 @@ public class GlobalExceptionHandler {
             Exception ex,
             WebRequest request) {
 
+        logger.error("Erro inesperado na requisição {}: {}",
+                request.getDescription(false), ex.getMessage(), ex);
+
         ErroResponse erro = new ErroResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-                "Ocorreu um erro inesperado: " + ex.getMessage(),
+                "Ocorreu um erro inesperado. Tente novamente mais tarde.",
                 request.getDescription(false).replace("uri=", "")
         );
 
